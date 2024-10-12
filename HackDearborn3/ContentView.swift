@@ -3,6 +3,7 @@
 import SwiftUI
 import Vision
 import VisionKit
+import CoreML
 
 struct ContentView: View {
     @State private var scannedText = ""
