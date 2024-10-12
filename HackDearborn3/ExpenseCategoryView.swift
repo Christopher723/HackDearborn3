@@ -4,40 +4,44 @@ struct ExpenseCategoryView: View {
 
     // Array of expense categories represented by emojis
     let categories = [
-        ("🍕🍻", "Food & Drinks"),
-        ("🏠🧾", "Housing"),
-        ("🚗💨", "Transportation")
+        ("🍕🍻", "Food & Drinks", AnyView(FoodSplitView())),
+        ("🏠🧾", "Housing", AnyView(HouseSplitView())),
+        ("🚗💨", "Transportation", AnyView(RideSplitView()))
     ]
 
     var body: some View {
-        VStack {
-            // Header text asking the user what kind of expense
-            Text("What kind of expense?")
-                .font(.largeTitle)
-                .bold()
-                .foregroundColor(.black)
-                .padding(.top, 20)
+        NavigationView {
+            VStack {
+           
+                Text("What kind of expense?")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.black)
+                    .padding(.top, 20)
 
-            Spacer()
+                Spacer()
 
-            // List of categories with emojis
-            ForEach(categories, id: \.1) { category in
-                HStack {
-                    Text(category.0)
-                        .font(.system(size: 50)) // Emoji size
-                        .padding(.trailing, 20)
-                    Text(category.1)
-                        .font(.title)
-                        .foregroundColor(.black)
-                    Spacer()
+                ForEach(categories, id: \.1) { category in
+                    NavigationLink(destination: category.2) {
+                        HStack {
+                            Text(category.0)
+                                .font(.system(size: 50))
+                                .padding(.trailing, 20)
+                            Text(category.1)
+                                .font(.title)
+                                .foregroundColor(.black)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray, lineWidth: 1))
+                        .padding(.horizontal)
+                    }
                 }
-                .padding(.horizontal)
-                .padding(.vertical, 10)
-                .background(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
-                .padding(.horizontal)
-            }
 
-            Spacer()
+                Spacer()
+            }
         }
     }
 }
@@ -45,3 +49,4 @@ struct ExpenseCategoryView: View {
 #Preview{
     ExpenseCategoryView()
 }
+
