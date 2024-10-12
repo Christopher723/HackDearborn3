@@ -1,17 +1,12 @@
-//
-//  HomeView.swift
-//  HackDearborn3
-//
-//  Created by dmoney on 10/12/24.
-//
 import SwiftUI
 import Vision
 import VisionKit
-import CoreML
+import NaturalLanguage
 
 struct HomeView: View {
     @State private var scannedText = ""
     @State private var isShowingScanner = false
+    @State private var totalAmount = ""
 
     var body: some View {
         NavigationView {
@@ -41,8 +36,6 @@ struct HomeView: View {
                     .font(.title2)
                     .foregroundColor(.gray)
                 
-               
-                
                 NavigationLink {
                     ExpenseCategoryView()
                 } label: {
@@ -53,13 +46,17 @@ struct HomeView: View {
                         .padding(.top, 10)
                         .padding(.bottom, 50)
                 }
-
                 
+                Text("Total Amount: \(totalAmount)")
+                    .font(.title)
+                    .bold()
+                    .padding()
+
                 Spacer()
             }
             .padding()
             .sheet(isPresented: $isShowingScanner) {
-                ScannerView(scannedText: $scannedText)
+                ScannerView(scannedText: $scannedText, totalAmount: $totalAmount)
             }
         }
     }
@@ -67,6 +64,7 @@ struct HomeView: View {
 
 struct ScannerView: UIViewControllerRepresentable {
     @Binding var scannedText: String
+    @Binding var totalAmount: String
 
     func makeUIViewController(context: Context) -> VNDocumentCameraViewController {
         let scannerViewController = VNDocumentCameraViewController()
@@ -77,14 +75,16 @@ struct ScannerView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: VNDocumentCameraViewController, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(scannedText: $scannedText)
+        Coordinator(scannedText: $scannedText, totalAmount: $totalAmount)
     }
 
     class Coordinator: NSObject, VNDocumentCameraViewControllerDelegate {
         @Binding var scannedText: String
+        @Binding var totalAmount: String
 
-        init(scannedText: Binding<String>) {
+        init(scannedText: Binding<String>, totalAmount: Binding<String>) {
             _scannedText = scannedText
+            _totalAmount = totalAmount
         }
 
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
@@ -111,6 +111,7 @@ struct ScannerView: UIViewControllerRepresentable {
 
                 DispatchQueue.main.async {
                     self?.scannedText = recognizedStrings.joined(separator: "\n")
+                    self?.findTotalAmount(from: self?.scannedText ?? "")
                 }
             }
 
@@ -118,6 +119,18 @@ struct ScannerView: UIViewControllerRepresentable {
                 try requestHandler.perform([request])
             } catch {
                 print("Failed to perform OCR: \(error)")
+            }
+        }
+
+        private func findTotalAmount(from text: String) {
+            let pattern = #"(?i)(Total)\s*[:\-]?\s*\$?(\d+\.?\d{0,2})"#
+            if let regex = try? NSRegularExpression(pattern: pattern, options: []) {
+                let nsRange = NSRange(text.startIndex..<text.endIndex, in: text)
+                if let match = regex.firstMatch(in: text, options: [], range: nsRange) {
+                    if let totalRange = Range(match.range(at: 2), in: text) {
+                        totalAmount = String(text[totalRange])
+                    }
+                }
             }
         }
     }
