@@ -10,53 +10,64 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            VStack {
-                Spacer()
-                // Scan Bill Button
-                Button(action: {
-                    // Action for scanning a bill
-                    isShowingScanner = true
-                }) {
-                    HStack {
-                        Image(systemName: "qrcode.viewfinder")
-                            .font(.largeTitle)
-                            .foregroundColor(.blue)
-                        Text("Scan Bill")
+            
+            ZStack {
+                Color("Mblue")
+                    .ignoresSafeArea()
+                VStack {
+                    Spacer()
+                    
+                    Button(action: {
+                        isShowingScanner = true
+                    }) {
+                        HStack {
+                            Image(systemName: "qrcode.viewfinder")
+                                .font(.largeTitle)
+                                .foregroundColor(Color("Myellow"))
+                            Text("Scan Bill")
+                                .font(.title)
+                                .bold()
+                                .foregroundColor(Color("Myellow"))
+                        }
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 10).stroke(Color("Myellow"), lineWidth: 2))
+                    }
+                    .shadow(radius: 10, x: 0, y: 10)
+                    .padding(.bottom, 20)
+                    
+                    Text("or")
+                        .font(.title2)
+                        .foregroundColor(Color("Myellow").opacity(0.8))
+                    
+                    NavigationLink {
+                        ExpenseCategoryView()
+                    } label: {
+                        Text("Enter expense manually")
                             .font(.title)
                             .bold()
-                            .foregroundColor(.black)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 32)
+                                .fill(Color("Myellow"))
+                            )
+                            .shadow(radius: 10, x: 0, y: 10)
+                            .foregroundColor(Color("Mblue"))
+                            .padding(.top, 10)
+                            .padding(.bottom, 50)
                     }
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 10).stroke(Color.blue, lineWidth: 2))
-                }
-                .padding(.bottom, 20)
-                
-                // Or Enter Manually Text
-                Text("or")
-                    .font(.title2)
-                    .foregroundColor(.gray)
-                
-                NavigationLink {
-                    ExpenseCategoryView()
-                } label: {
-                    Text("Enter expense manually")
+                    
+                    Text("Total Amount: \(totalAmount)")
                         .font(.title)
+                        .foregroundColor(Color("Myellow"))
                         .bold()
-                        .foregroundColor(.black)
-                        .padding(.top, 10)
-                        .padding(.bottom, 50)
+                        .padding()
+                    
+                    Spacer()
                 }
-                
-                Text("Total Amount: \(totalAmount)")
-                    .font(.title)
-                    .bold()
-                    .padding()
-
-                Spacer()
-            }
-            .padding()
-            .sheet(isPresented: $isShowingScanner) {
-                ScannerView(scannedText: $scannedText, totalAmount: $totalAmount)
+                .padding()
+                .sheet(isPresented: $isShowingScanner) {
+                    ScannerView(scannedText: $scannedText, totalAmount: $totalAmount)
+                }
             }
         }
     }
