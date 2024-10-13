@@ -13,7 +13,7 @@ struct HouseSplitView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("House Split")
         }
         .padding()
     }
