@@ -1,0 +1,65 @@
+{
+  "identifier" : "7FA7EFEE",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "5.99",
+      "familyShareable" : false,
+      "internalID" : "6447991660",
+      "localizations" : [
+        {
+          "description" : "Big voluntary tip",
+          "displayName" : "Big Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "tip.big",
+      "referenceName" : "Big Tip",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "6447991625",
+      "localizations" : [
+        {
+          "description" : "Medium voluntary tip",
+          "displayName" : "Medium Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "tip.medium",
+      "referenceName" : "Medium Tip",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6447991525",
+      "localizations" : [
+        {
+          "description" : "Small voluntary tip",
+          "displayName" : "Small Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "tip.small",
+      "referenceName" : "Small Tip",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1642182485",
+    "_developerTeamID" : "3Z2Q6NDKC5",
+    "_lastSynchronizedDate" : 703535887.16294503
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}
