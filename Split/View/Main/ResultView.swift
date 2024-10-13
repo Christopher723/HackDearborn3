@@ -1,16 +1,9 @@
-//
-//  ResultView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 08/01/2022.
-//
-
 import SwiftUI
 import UIKit
 import StoreKit
 
 struct ResultView: View {
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass //for iPad specificity
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     var isShownInHistory = false
     @EnvironmentObject var model: ModelData
@@ -63,199 +56,205 @@ struct ResultView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                ZStack {
-                    HStack {
-                        VStack{
-                            Button{
-                                showAllList = true
-                            } label: {
-                                VStack {
-                                    HStack(spacing:4) {
-                                        Image(systemName: "info.circle")
-                                        HStack(alignment: .firstTextBaseline) {
-                                            Text("Total".uppercased())
-                                                .font(.title2)
-                                                .foregroundColor(.primary)
-                                            Text(textTipTax)
-                                                .foregroundColor(.secondary)
-                                        }
-                                    }
-                                    Text(model.showPrice(price: model.totalPrice))
-                                        .font(.largeTitle)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.primary)
-                                    Text(model.receiptName)
-                                        .font(.caption)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .sheet(isPresented: $showAllList, content: {
-                                ListSheetView(itemCounter: .constant(-1), isShownInHistory: isShownInHistory)
-                            })
-                            .sheet(isPresented: $showUserDetails, content: {
-                                UserChoicesView(user: selectedUser)
-                            })
-                            .sheet(isPresented: $showSharingOptions, content: {
-                                ActivityViewController(activityItems: contentToShare)
-                            })
-                            .sheet(isPresented: $showIndividualSharingOptions, content: {
-                                ActivityViewController(activityItems: [model.individualSharedText(ofUser: selectedUser)])
-                            })
-                            .sheet(isPresented: $showExportToTricount, content: {
-                                TricountExportSheet()
-                            })
-                        }
-                        .padding(.top,isShownInHistory ? 8 : 35)
-                        .padding(.bottom,5)
-                    }
-                    
-                    HStack {
-                        Spacer()
+            
+            ZStack {
+                Color("mBlue")
+                    .ignoresSafeArea()
+                VStack {
+                    ZStack {
                         
-                        Menu {
-                            if !compatibleTricounts(users: model.users, tricountList: model.parameters.tricountList).isEmpty && model.users.map({model.balance(ofUser: $0)}).min() ?? 0 >= 0 {
-                                Button {
-                                    showExportToTricount = true
+                        HStack {
+                            VStack{
+                                Button{
+                                    showAllList = true
                                 } label: {
-                                    HStack {
-                                        Label("Export to Tricount", systemImage: "plus.forwardslash.minus")
-                                    }
-                                }
-                            }
-                            
-                            Button {
-                                chosenSharingOption = "overview"
-                                showSharingOptions = true
-                            } label: {
-                                Label("Share totals", systemImage: "message")
-                            }
-                            
-                            Button {
-                                chosenSharingOption = "details"
-                                showSharingOptions = true
-                            } label: {
-                                Label("Share detailed results", systemImage: "plus.message")
-                            }
-                            
-                            Button {
-                                chosenSharingOption = "scan"
-                                showSharingOptions = true
-                            } label: {
-                                Label("Share scanned receipt", systemImage: "doc")
-                            }
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .padding(.trailing, 30)
-                        .padding(.bottom, isShownInHistory ? 0 : 60)
-                    }
-                }
-                
-                
-                ScrollView {
-                    HStack {
-                        AddPercentButton(isTip: true, color: Color.pink, isShownInHistory: isShownInHistory)
-                        AddPercentButton(isTip: false, color: CustomColor.bankGreen, isShownInHistory: isShownInHistory)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 5)
-                    
-                    VStack {
-                        ForEach(model.users.sorted(by: {model.balance(ofUser: $0)>model.balance(ofUser: $1)})) { user in
-                            HStack {
-                                HStack {
-                                    Button {
-                                        selectedUser = user
-                                        showUserDetails = true
-                                    } label: {
-                                        Image(systemName: "person")
-                                            .font(.title2)
-                                        
-                                        VStack(alignment: .leading) {
-                                            Text(user.name)
-                                                .font(.title3)
-                                            Text("\(model.chosenItems(ofUser: user).count) items")
-                                                .font(.caption)
-                                        }
-                                        .foregroundColor(.primary)
-                                        
-                                        Spacer()
-                                        
-                                        VStack(alignment: .trailing) {
-                                            Text(model.showPrice(price: model.balance(ofUser: user)))
-                                                .fontWeight(.semibold)
-                                                .font(.system(size: fontSizeProportionalToPrice(total: model.totalPrice, price: model.balance(ofUser: user))))
-                                            .foregroundColor(.primary)
-                                            
-                                            if textTipTax != ""{
-                                                Text(textTipTax)
-                                                    .foregroundColor(.secondary)
-                                                    .font(.caption2)
+                                    VStack {
+                                        HStack(spacing:4) {
+                                            Image(systemName: "info.circle")
+                                                .tint(Color("mYellow"))
+                                            HStack(alignment: .firstTextBaseline) {
+                                                Text("Total")
+                                                    .font(.title2)
+                                                    .foregroundColor(Color("mYellow"))
+                                                
                                             }
                                         }
+                                        Text(model.showPrice(price: model.totalPrice))
+                                            .font(.title)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Color("mYellow"))
+                                        Text(model.receiptName)
+                                            .font(.caption)
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(Color("mYellow").opacity(0.8))
                                     }
-                                    
-                                    Button {
-                                        selectedUser = user
-                                        showIndividualSharingOptions = true
-                                    } label: {
-                                        Label("", systemImage: "square.and.arrow.up")
-                                            .labelStyle(.iconOnly)
-                                    }
-                                    .padding(.leading,7)
-                                    .padding(.bottom,4)
-                                    
                                 }
-                                .padding()
+                                .sheet(isPresented: $showAllList, content: {
+                                    ListSheetView(itemCounter: .constant(-1), isShownInHistory: isShownInHistory)
+                                })
+                                .sheet(isPresented: $showUserDetails, content: {
+                                    UserChoicesView(user: selectedUser)
+                                })
+                                .sheet(isPresented: $showSharingOptions, content: {
+                                    ActivityViewController(activityItems: contentToShare)
+                                })
+                                .sheet(isPresented: $showIndividualSharingOptions, content: {
+                                    ActivityViewController(activityItems: [model.individualSharedText(ofUser: selectedUser)])
+                                })
+                                .sheet(isPresented: $showExportToTricount, content: {
+                                    TricountExportSheet()
+                                })
                             }
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(15)
-                            .padding(.horizontal)
+                            .padding(.top,isShownInHistory ? 8 : 35)
+                            .padding(.bottom,5)
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            
+                            Menu {
+                                if !compatibleTricounts(users: model.users, tricountList: model.parameters.tricountList).isEmpty && model.users.map({model.balance(ofUser: $0)}).min() ?? 0 >= 0 {
+                                    Button {
+                                        showExportToTricount = true
+                                    } label: {
+                                        HStack {
+                                            Label("Export to Tricount", systemImage: "plus.forwardslash.minus")
+                                        }
+                                    }
+                                }
+                                
+                                Button {
+                                    chosenSharingOption = "overview"
+                                    showSharingOptions = true
+                                } label: {
+                                    Label("Share totals", systemImage: "message")
+                                }
+                                
+                                Button {
+                                    chosenSharingOption = "details"
+                                    showSharingOptions = true
+                                } label: {
+                                    Label("Share detailed results", systemImage: "plus.message")
+                                }
+                                
+                                Button {
+                                    chosenSharingOption = "scan"
+                                    showSharingOptions = true
+                                } label: {
+                                    Label("Share scanned receipt", systemImage: "doc")
+                                }
+                            } label: {
+                                Image(systemName: "square.and.arrow.up")
+                                    .tint(Color("mYellow"))
+                            }
+                            .padding(.trailing, 30)
+                            .padding(.bottom, isShownInHistory ? 0 : 60)
                         }
                     }
-                    .padding(.top, horizontalSizeClass == .compact ? 5 : 25)
                     
-                    StatView()
-                        .padding(10)
-                        .padding(.top, horizontalSizeClass == .compact ? 0 : 10)
                     
-                    Text("\(selectedUser.name) \(chosenSharingOption)") //due to https://developer.apple.com/forums/thread/652080
-                         .hidden()
-                         .frame(height:0)
-                }
-                
-            }
-            //.navigationBarTitle("", displayMode: .inline)
-            .navigationBarHidden(true)
-            .padding(.horizontal, horizontalSizeClass == .compact ? 0 : 30)
-            .toolbar {
-                ToolbarItem(placement: .bottomBar) {
-                    if !isShownInHistory {
-                        Button {
-                            model.date = Date()
-                            ResultsStore.append(receiptName: model.receiptName, users: model.users, listOfProductsAndPrices: model.listOfProductsAndPrices, currency: model.currency, date: model.date, images: model.images, compressImages: model.parameters.compressImages, tipRate: model.tipRate, tipEvenly: model.tipEvenly, taxRate: model.taxRate, taxEvenly: model.taxEvenly) { result in
-                                switch result {
-                                case .failure(let error):
-                                    fatalError(error.localizedDescription)
-                                case .success(_):
-                                    withAnimation() {
-                                        if model.numberOfScanFails == 0 {
-                                            SKStoreReviewController.requestReviewInCurrentScene()
+                    ScrollView {
+
+                        VStack {
+                            ForEach(model.users.sorted(by: {model.balance(ofUser: $0)>model.balance(ofUser: $1)})) { user in
+                                HStack {
+                                    HStack {
+                                        Button {
+                                            selectedUser = user
+                                            showUserDetails = true
+                                        } label: {
+                                            Image(systemName: "person")
+                                                .tint(Color("mBlue"))
+                                                .font(.title2)
+                                            
+                                            
+                                            VStack(alignment: .leading) {
+                                                Text(user.name)
+                                                    .font(.title3)
+                                                Text("\(model.chosenItems(ofUser: user).count) items")
+                                                    .font(.caption)
+                                            }
+                                            .foregroundColor(.primary)
+                                            
+                                            Spacer()
+                                            
+                                            VStack(alignment: .trailing) {
+                                                Text(model.showPrice(price: model.balance(ofUser: user)))
+                                                    .fontWeight(.semibold)
+                                                    .font(.system(size: fontSizeProportionalToPrice(total: model.totalPrice, price: model.balance(ofUser: user))))
+                                                    .foregroundColor(.primary)
+                                                
+                                                if textTipTax != ""{
+                                                    Text(textTipTax)
+                                                        .foregroundColor(.secondary)
+                                                        .font(.caption2)
+                                                }
+                                            }
                                         }
-                                        model.eraseModelData()
+                                        
+                                        Button {
+                                            selectedUser = user
+                                            showIndividualSharingOptions = true
+                                        } label: {
+                                            Label("", systemImage: "square.and.arrow.up")
+                                                .labelStyle(.iconOnly)
+                                                .tint(Color("mBlue"))
+                                        }
+                                        .padding(.leading,7)
+                                        .padding(.bottom,4)
+                                        
                                     }
+                                    .padding()
                                 }
-                            }
-                        } label: {
-                            HStack {
-                                Image(systemName: "checkmark")
-                                Text("Done")
+                                .background(Color("mYellow"))
+                                .cornerRadius(24)
+                                .padding(.horizontal)
                             }
                         }
-                        .buttonStyle(.borderedProminent)
-                        .padding(7)
+                        .padding(.top, horizontalSizeClass == .compact ? 5 : 25)
+                        
+                        
+                        
+                        Text("\(selectedUser.name) \(chosenSharingOption)") //due to https://developer.apple.com/forums/thread/652080
+                            .hidden()
+                            .frame(height:0)
+                    }
+                    
+                }
+                .navigationBarHidden(true)
+                .padding(.horizontal, horizontalSizeClass == .compact ? 0 : 30)
+                .toolbar {
+                    ToolbarItem(placement: .bottomBar) {
+                        if !isShownInHistory {
+                            Button {
+                                model.date = Date()
+                                ResultsStore.append(receiptName: model.receiptName, users: model.users, listOfProductsAndPrices: model.listOfProductsAndPrices, currency: model.currency, date: model.date, images: model.images, compressImages: model.parameters.compressImages, tipRate: model.tipRate, tipEvenly: model.tipEvenly, taxRate: model.taxRate, taxEvenly: model.taxEvenly) { result in
+                                    switch result {
+                                    case .failure(let error):
+                                        fatalError(error.localizedDescription)
+                                    case .success(_):
+                                        withAnimation() {
+                                            if model.numberOfScanFails == 0 {
+                                                SKStoreReviewController.requestReviewInCurrentScene()
+                                            }
+                                            model.eraseModelData()
+                                        }
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "checkmark")
+                                        .tint(Color("mBlue"))
+                                    Text("Done")
+                                        .foregroundStyle(Color("mBlue"))
+                                        
+                                }
+                            }
+                            .background(Color("mYellow"))
+                            .cornerRadius(12)
+                            
+                            .padding(7)
+                        }
                     }
                 }
             }
