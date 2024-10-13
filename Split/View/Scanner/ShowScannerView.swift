@@ -59,28 +59,7 @@ struct ShowScannerView: View {
                 }
             })
 //            .transition(.move(edge: .bottom))
-            .slideOverCard(isPresented: $showTutorialScreen, content: {
-                VStack {
-                    ScanTutorialView(advancedRecognition: $model.parameters.advancedRecognition)
-                    Button {
-                        showTutorialScreen = false
-                        model.parameters.showScanTutorial = false
-                        ParametersStore.save(parameters: model.parameters) { result in
-                            switch result {
-                            case .failure(let error):
-                                fatalError(error.localizedDescription)
-                            case .success(_):
-                                print("Settings Saved")
-                            }
-                        }
-                    } label: {
-                        Text("OK, do not show again")
-                            .font(Font.footnote)
-                    }
-                    .padding(.top,5)
-                }
-            })
-            .ignoresSafeArea(.all)
+            
         }
     }
 }

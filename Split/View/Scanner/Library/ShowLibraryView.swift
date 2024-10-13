@@ -44,28 +44,7 @@ struct ShowLibraryView: View {
                     showTutorialScreen = model.parameters.showLibraryTutorial
                 }
             })
-            .slideOverCard(isPresented: $showTutorialScreen, content: {
-                VStack {
-                    LibraryTutorialView(advancedRecognition: $model.parameters.advancedRecognition)
-                    Button {
-                        showTutorialScreen = false
-                        model.parameters.showLibraryTutorial = false
-                        ParametersStore.save(parameters: model.parameters) { result in
-                            switch result {
-                            case .failure(let error):
-                                fatalError(error.localizedDescription)
-                            case .success(_):
-                                print("Settings Saved")
-                            }
-                        }
-                    } label: {
-                        Text("OK, do not show again")
-                            .font(Font.footnote)
-                    }
-                    .padding(.top,10)
-                }
-            })
-            .ignoresSafeArea(.all)
+            
     }
 }
 
