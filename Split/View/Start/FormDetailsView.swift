@@ -1,10 +1,3 @@
-//
-//  FormDetailsView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 21/03/2022.
-//
-
 import SwiftUI
 
 struct FormDetailsView: View {
@@ -15,94 +8,106 @@ struct FormDetailsView: View {
     @Binding var showAlert1: Bool
     @Binding var showAlert2: Bool
     
-    @State var showInfo = false
-    
     var body: some View {
-        Section {
+        ZStack {
+            // Background color
+            Color("mBlue")
+                .ignoresSafeArea()
             
-            Menu {
-                Picker("Currency", selection: $currencyType.animation()) {
-                    ForEach(Currency.SymbolType.allCases, id: \.self, content: { currencyType in
-                        Text(Currency(symbol: currencyType).value)
-                    })
-                }
-            } label: {
-                HStack {
-                    Image(systemName: "creditcard")
-                        .foregroundColor(Color.purple)
-                        .padding(.trailing, 1)
-                    Text("Currency")
-                        .foregroundColor(.primary)
-                    Spacer()
-                    Text("\(Currency(symbol: currencyType).value)")
-                        .fontWeight(.semibold)
-                        .padding(.trailing, 5)
-                }
-                
-            }
-            .onAppear {
-                ParametersStore.load { result in
-                    switch result {
-                    case .failure(let error):
-                        fatalError(error.localizedDescription)
-                    case .success(let parameters):
-                        if names.isEmpty && newUserName.isEmpty {
-                            currencyType = parameters.defaultCurrency.symbol
+            ScrollView {
+                VStack(alignment: .leading, spacing: 25) {
+                    Text("Users")
+                        .foregroundColor(Color("mYellow"))
+                        .font(.title.bold())
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    // Currency Picker
+                    Menu {
+                        Picker("Currency", selection: $currencyType.animation()) {
+                            ForEach(Currency.SymbolType.allCases, id: \.self) { currencyType in
+                                Text(Currency(symbol: currencyType).value)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color("mYellow"))
+                                    .cornerRadius(32)
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Currency: \(Currency(symbol: currencyType).value)")
+                                .foregroundColor(Color("mBlue"))
+                            Image(systemName: "chevron.down")
+                                .foregroundColor(Color("mBlue"))
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color("mYellow"))
+                        .cornerRadius(32)
+                    }
+                    .onAppear {
+                        ParametersStore.load { result in
+                            switch result {
+                            case .failure(let error):
+                                fatalError(error.localizedDescription)
+                            case .success(let parameters):
+                                if names.isEmpty && newUserName.isEmpty {
+                                    currencyType = parameters.defaultCurrency.symbol
+                                }
+                            }
                         }
                     }
-                }
-            }
-            
-            ForEach(names, id:\.self) { name in
-                HStack {
-                    Image(systemName: "person")
-                        .foregroundColor(Color.secondary.opacity(0.7))
-                        .padding(.leading, 2)
-                        .padding(.trailing, 3)
-                    Text(name)
-                }
-            }
-            .onDelete { indices in
-                withAnimation() {
-                    names.remove(atOffsets: indices)
-                }
-            }
-            
-            HStack {
-                Image(systemName: "person")
-                    .foregroundColor(Color.secondary.opacity(0.7))
-                    .padding(.leading, 2)
-                    .padding(.trailing, 3)
-                TextField("New user", text: $newUserName.animation())
-                Button(action: {
-                    let _ = checkAndAddName()
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                }
-                .disabled(newUserName.isEmpty)
-            }
-        } header: {
-            HStack {
-                Text("Users")
-                    .alert(isPresented: $showAlert1) {
-                        Alert(title: Text("Missing information"), message: Text("Please fill in all usernames"), dismissButton: .default(Text("OK")))
+                    
+                    // List of Names
+                    ForEach(names, id: \.self) { name in
+                        Text(name)
+                            .foregroundColor(Color("mBlue"))
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color("mYellow"))
+                            .cornerRadius(32)
+                            .shadow(radius: 10, x: 0, y: 10)
                     }
-                Text("")
-                    .alert(isPresented: $showAlert2) {
-                        Alert(title: Text("Incorrect names"), message: Text("Users must have distinct names"), dismissButton: .default(Text("OK")))
+                    .onDelete { indices in
+                        withAnimation {
+                            names.remove(atOffsets: indices)
+                        }
                     }
+                    
+                    // New User TextField
+                    TextField("New user", text: $newUserName)
+                        .foregroundColor(Color("mBlue"))
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color("mYellow"))
+                        .cornerRadius(24)
+                        .shadow(radius: 10, x: 0, y: 10)
+                    
+                    // Add Button
+                    Button(action: {
+                        let _ = checkAndAddName()
+                    }) {
+                        Text("Add")
+                            .foregroundColor(Color("mBlue"))
+                            .padding(.horizontal, 40)
+                            .padding(.vertical, 10)
+                            .background(Color("mYellow"))
+                            .cornerRadius(24)
+                            .shadow(radius: 10, x: 0, y: 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .disabled(newUserName.isEmpty)
+                }
+                .padding()
             }
-        } footer: {
-            //Label("To delete a name, swipe from right to left. To edit a name, delete it and add it again.", systemImage: "info.circle")
         }
-        
     }
     
     func checkAndAddName() -> Bool {
         let realName = newUserName.trimmingCharacters(in: .whitespaces)
         if !realName.isEmpty {
             if !names.contains(realName) {
-                withAnimation() {
+                withAnimation {
                     names.append(realName)
                 }
                 newUserName = ""
@@ -117,24 +122,22 @@ struct FormDetailsView: View {
     }
     
     func isFinalUsersCorrect() -> Bool {
-        var ok = true
+        // Ensure new user is added before proceeding if it’s not empty
         if !newUserName.isEmpty {
-            ok = checkAndAddName()
+            return checkAndAddName()
         }
-        if ok {
-            return true
-        } else {
-            return false
-        }
+        return true
     }
 }
 
 struct FormDetailsView_Previews: PreviewProvider {
-    
     static var previews: some View {
-        List {
-            let v = FormDetailsView(names: .constant(["Hugo", "Thomas"]), newUserName: .constant("Lucas"), currencyType: .constant(Currency.SymbolType.euro), showAlert1: .constant(false), showAlert2: .constant(false))
-            v
-        }
+        FormDetailsView(
+            names: .constant(["Hugo", "Thomas"]),
+            newUserName: .constant("Lucas"),
+            currencyType: .constant(Currency.SymbolType.euro),
+            showAlert1: .constant(false),
+            showAlert2: .constant(false)
+        )
     }
 }
