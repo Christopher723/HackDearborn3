@@ -129,9 +129,11 @@ struct ScannerView: UIViewControllerRepresentable {
                 if let match = regex.firstMatch(in: text, options: [], range: nsRange) {
                     if let totalRange = Range(match.range(at: 2), in: text) {
                         totalAmount = String(text[totalRange])
+                        return
                     }
                 }
             }
+            totalAmount = "Total not found"
         }
     }
 }
