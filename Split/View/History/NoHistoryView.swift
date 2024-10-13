@@ -1,9 +1,4 @@
-//
-//  NoHistoryView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 27/02/2022.
-//
+
 
 import SwiftUI
 

@@ -1,9 +1,3 @@
-//
-//  PurchaseManager.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 15/04/2023.
-//
 
 import Foundation
 import StoreKit

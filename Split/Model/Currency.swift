@@ -1,9 +1,4 @@
-//
-//  Currency.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 16/01/2022.
-//
+
 
 import Foundation
 

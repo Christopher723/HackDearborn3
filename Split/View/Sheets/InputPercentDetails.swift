@@ -1,9 +1,3 @@
-//
-//  InputPercentDetails.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 21/03/2023.
-//
 
 import SwiftUI
 

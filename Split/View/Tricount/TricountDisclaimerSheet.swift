@@ -1,9 +1,3 @@
-//
-//  TricountDisclaimerSheet.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 16/09/2022.
-//
 
 import SwiftUI
 

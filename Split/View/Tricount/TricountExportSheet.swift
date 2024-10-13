@@ -1,9 +1,4 @@
-//
-//  TricountExportSheet.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 27/04/2022.
-//
+
 
 import SwiftUI
 

@@ -1,9 +1,3 @@
-//
-//  Text.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 05/01/2022.
-//
 
 import Foundation
 import UIKit

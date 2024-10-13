@@ -1,9 +1,4 @@
-//
-//  SelectableItems.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 06/01/2022.
-//
+
 
 import SwiftUI
 

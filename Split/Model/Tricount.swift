@@ -1,9 +1,4 @@
-//
-//  Tricount.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 28/07/2022.
-//
+
 
 import Foundation
 import WebKit

@@ -1,9 +1,3 @@
-//
-//  LoadItemsView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 08/01/2022.
-//
 
 import SwiftUI
 

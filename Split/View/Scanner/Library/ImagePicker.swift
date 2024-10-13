@@ -1,9 +1,3 @@
-//
-//  ImagePicker.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 19/03/2023.
-//
 
 import PhotosUI
 import SwiftUI

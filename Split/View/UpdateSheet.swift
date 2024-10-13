@@ -1,13 +1,8 @@
-//
-//  UpdateSheet.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 13/04/2023.
-//
+
 
 import SwiftUI
 
-// TO MODIFY AT EACH NEW VERSION
+
 struct UpdateSheet: View {
     
     @Environment(\.dismiss) var dismiss

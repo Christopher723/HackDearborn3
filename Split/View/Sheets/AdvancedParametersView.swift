@@ -1,9 +1,3 @@
-//
-//  AdvancedParametersView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 10/03/2022.
-//
 
 import SwiftUI
 

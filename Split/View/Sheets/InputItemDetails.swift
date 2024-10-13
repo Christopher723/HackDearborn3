@@ -1,9 +1,4 @@
-//
-//  InputItemDetails.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 28/01/2022.
-//
+
 
 import SwiftUI
 

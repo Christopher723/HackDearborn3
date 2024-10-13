@@ -1,9 +1,3 @@
-//
-//  LastItemView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 09/01/2022.
-//
 
 import SwiftUI
 

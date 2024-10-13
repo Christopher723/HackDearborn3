@@ -1,9 +1,3 @@
-//
-//  DivideItemView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 17/06/2022.
-//
 
 import SwiftUI
 

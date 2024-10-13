@@ -1,9 +1,4 @@
-//
-//  EditFavoriteButton.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 21/03/2022.
-//
+
 
 import SwiftUI
 

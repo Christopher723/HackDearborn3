@@ -1,9 +1,4 @@
-//
-//  NoItemFound.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 06/03/2022.
-//
+
 
 import SwiftUI
 

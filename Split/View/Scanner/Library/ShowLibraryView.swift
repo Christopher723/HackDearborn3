@@ -1,9 +1,4 @@
-//
-//  ShowLibraryView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 19/03/2023.
-//
+
 
 import SwiftUI
 import PhotosUI

@@ -1,9 +1,3 @@
-//
-//  TextRecognitionFunctions.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 19/03/2023.
-//
 
 import Foundation
 import PhotosUI

@@ -1,9 +1,4 @@
-//
-//  ResultCard.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 26/02/2022.
-//
+
 
 import SwiftUI
 

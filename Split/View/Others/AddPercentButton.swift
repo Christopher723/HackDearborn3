@@ -1,9 +1,3 @@
-//
-//  AddPercentButton.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 25/03/2023.
-//
 
 import SwiftUI
 

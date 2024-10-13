@@ -1,9 +1,3 @@
-//
-//  TricountAddSheet.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 28/07/2022.
-//
 
 import SwiftUI
 

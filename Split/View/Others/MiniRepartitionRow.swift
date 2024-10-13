@@ -1,9 +1,4 @@
-//
-//  MiniRepartitionRow.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 30/01/2022.
-//
+
 
 import SwiftUI
 

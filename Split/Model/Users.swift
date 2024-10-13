@@ -1,9 +1,4 @@
-//
-//  Users.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 04/01/2022.
-//
+
 
 import Foundation
 

@@ -1,9 +1,3 @@
-//
-//  ListSheetView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 07/01/2022.
-//
 
 import SwiftUI
 

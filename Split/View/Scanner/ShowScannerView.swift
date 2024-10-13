@@ -1,9 +1,4 @@
-//
-//  ShowScannerView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 20/01/2022.
-//
+
 
 import SwiftUI
 

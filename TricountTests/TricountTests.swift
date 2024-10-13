@@ -1,9 +1,4 @@
-//
-//  TricountTests.swift
-//  TricountTests
-//
-//  Created by Hugo Queinnec on 29/08/2022.
-//
+
 
 import XCTest
 @testable import Split_

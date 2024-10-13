@@ -1,9 +1,4 @@
-//
-//  Visualization.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 22/01/2022.
-//
+
 
 import Foundation
 import Vision

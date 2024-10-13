@@ -1,9 +1,3 @@
-//
-//  ShowroomPreviews.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 31/08/2022.
-//
 
 import SwiftUI
 import Vision

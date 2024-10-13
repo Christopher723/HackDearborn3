@@ -1,9 +1,3 @@
-//
-//  SettingsView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 24/02/2022.
-//
 
 import SwiftUI
 

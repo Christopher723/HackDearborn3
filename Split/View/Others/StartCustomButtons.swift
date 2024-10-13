@@ -1,9 +1,3 @@
-//
-//  StartCustomButtons.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 13/04/2023.
-//
 
 import SwiftUI
 
