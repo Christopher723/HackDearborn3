@@ -146,27 +146,7 @@ struct AttributionView: View {
                     ListSheetView(itemCounter: .constant(-1))
                 }
             })
-            .slideOverCard(isPresented: $showTutorialScreen, content: {
-                VStack {
-                    AttributionTutorialView()
-                    Button {
-                        showTutorialScreen = false
-                        model.parameters.showAttributionTutorial = false
-                        ParametersStore.save(parameters: model.parameters) { result in
-                            switch result {
-                            case .failure(let error):
-                                fatalError(error.localizedDescription)
-                            case .success(_):
-                                print("Settings Saved")
-                            }
-                        }
-                    } label: {
-                        Text("OK, do not show again")
-                            .font(Font.footnote)
-                    }
-                    .padding(.top,10)
-                }
-            })
+           
         }
     }
 }
