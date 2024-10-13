@@ -1,9 +1,3 @@
-//
-//  UserChoicesDetailView.swift
-//  Split
-//
-//  Created by Hugo Queinnec on 30/01/2022.
-//
 
 import SwiftUI
 
@@ -27,85 +21,108 @@ struct UserChoicesView: View {
     var body: some View {
         let chosenItems: [PairProductPrice] = model.chosenItems(ofUser: user)
         
-        VStack {
-            NavigationView {
-                VStack{
-
-                    List() {
+        
+           
+                NavigationView {
+                    ZStack {
+                        Color("mBlue")
+                            .ignoresSafeArea()
+                        VStack(spacing: 50) {
                         
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text("\(user.name),")
-                                    .font(.title)
-                                    .fontWeight(.semibold)
-                                Text("Here are the details of your purchases")
-                                    .font(.title)
-                                    .fontWeight(.regular)
-                                Text("\(editPair.name)") //due to https://developer.apple.com/forums/thread/652080
-                                    .hidden()
-                                    .frame(height:0)
-                                if textTipTax() != ""{
-                                    Text(textTipTax())
-                                        .font(.subheadline)
-                                        .fontWeight(.regular)
-                                }
-                            }
-                            Spacer()
-                        }
-                        //.padding(.bottom, -20)
-                        .listRowBackground(Color.clear)
-                        
-                        Section(header: Text("\(chosenItems.count) items — \(model.showPrice(price: model.balance(ofUser: user))) \(textTipTax(short: true))"), footer: Label("Items sorted by decreasing price contribution", systemImage: "arrow.up.arrow.down")){
-                        //Section {
-                            ForEach(chosenItems.sorted(by: {$0.price/Double($0.chosenBy.count)>$1.price/Double($1.chosenBy.count)})) { item in
+                            HStack {
                                 VStack {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 2) {
-                                            Text(item.name)
-                                                //.padding(.vertical, 3)
-                                            MiniRepartitionRow(userIDs: item.chosenBy)
-                                                .padding(.horizontal, 4)
-                                                //.padding(.bottom, 3)
-                                        }
-                                        .sheet(isPresented: $showSafariView, content: {
-                                            RestrictedBrowserView(isShown: $showSafariView, imageName: editPair.name)
-                                        })
-                                        .contextMenu{
-                                            Button{
-                                                editPair = item
-                                                showSafariView = true
-                                            } label: {
-                                                Label("Search for images", systemImage: "magnifyingglass")
-                                            }
-                                        }
+                                    VStack {
+                                        Text("\(user.name),")
+                                            .foregroundStyle(Color("mBlue"))
+                                            .font(.title.weight(.semibold))
                                         
-                                        Spacer()
-                                        
-
-                                        VStack {
-                                            HStack {
-                                                Text(model.showPrice(price: item.price) + " ÷ "+String(item.chosenBy.count))
-                                                    .font(.subheadline)
-                                                    .fontWeight(.light)
-                                            }
-                                            Text(model.showPrice(price: item.price/Double(item.chosenBy.count)))
-                                                .fontWeight(.semibold)
-                                        }
-
+                                        Text("Here are the details of your purchases")
+                                            .foregroundStyle(Color("mBlue"))
+                                            .multilineTextAlignment(.center)
+                                            .font(.title)
+                                    }
+                                    .padding()
+                                    .background(RoundedRectangle(cornerRadius: 24).fill(Color("mYellow")).shadow(radius: 10, x: 0, y: 10))
+                                    
+                                    Text("\(editPair.name)")
+                                        .hidden()
+                                        .frame(height:0)
+                                    if textTipTax() != ""{
+                                        Text(textTipTax())
+                                            .foregroundStyle(Color("mYellow"))
+                                            .font(.headline)
+                                            .multilineTextAlignment(.center)
+                                            .shadow(radius: 10, x: 0, y: 10)
+                                            .padding(.top, 10)
+                                            
                                     }
                                 }
-                                
+                                Spacer()
                             }
-                        }
+                            
+                            Section(){
+
+                                ForEach(chosenItems.sorted(by: {$0.price/Double($0.chosenBy.count)>$1.price/Double($1.chosenBy.count)})) { item in
+                                    VStack {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(item.name)
+                                                    .foregroundStyle(Color("mYellow"))
+                                                    .shadow(radius: 10, x: 0, y: 10)
+                                                
+                                                MiniRepartitionRow(userIDs: item.chosenBy)
+                                                    .shadow(radius: 10, x: 0, y: 10)
+                                                    .padding(.horizontal, 4)
+                                            }
+                                            .sheet(isPresented: $showSafariView, content: {
+                                                RestrictedBrowserView(isShown: $showSafariView, imageName: editPair.name)
+                                            })
+                                            .contextMenu{
+                                                Button{
+                                                    editPair = item
+                                                    showSafariView = true
+                                                } label: {
+                                                    Label("Search for images", systemImage: "magnifyingglass")
+                                                        
+                                                }
+                                            }
+                                            
+                                            Spacer()
+                                            
+                                            
+                                            VStack {
+                                                HStack {
+                                                    Text(model.showPrice(price: item.price) + " ÷ "+String(item.chosenBy.count))
+                                                        .foregroundStyle(Color("mYellow"))
+                                                        .shadow(radius: 10, x: 0, y: 10)
+                                                        .font(.subheadline)
+                                                        
+                                                }
+                                                Text(model.showPrice(price: item.price/Double(item.chosenBy.count)))
+                                                    .foregroundStyle(Color("mYellow"))
+                                                    .shadow(radius: 10, x: 0, y: 10)
+                                                    
+                                            }
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                            }
+                        
+                        
                     }
+                    .padding()
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    
                 }
-                .navigationBarTitle("")
-                .navigationBarHidden(true)
+                .navigationViewStyle(StackNavigationViewStyle())
+                
             }
-            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
-}
+
 
 struct UserChoicesDetailView_Previews: PreviewProvider {
     static let model: ModelData = {

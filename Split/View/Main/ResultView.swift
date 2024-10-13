@@ -72,10 +72,12 @@ struct ResultView: View {
                                         HStack(spacing:4) {
                                             Image(systemName: "info.circle")
                                                 .tint(Color("mYellow"))
+                                                .shadow(radius: 10, x: 0, y: 10)
                                             HStack(alignment: .firstTextBaseline) {
                                                 Text("Total")
                                                     .font(.title2)
                                                     .foregroundColor(Color("mYellow"))
+                                                    .shadow(radius: 10, x: 0, y: 10)
                                                 
                                             }
                                         }
@@ -83,10 +85,12 @@ struct ResultView: View {
                                             .font(.title)
                                             .fontWeight(.semibold)
                                             .foregroundColor(Color("mYellow"))
+                                            .shadow(radius: 10, x: 0, y: 10)
                                         Text(model.receiptName)
                                             .font(.caption)
                                             .fontWeight(.semibold)
                                             .foregroundColor(Color("mYellow").opacity(0.8))
+                                            .shadow(radius: 10, x: 0, y: 10)
                                     }
                                 }
                                 .sheet(isPresented: $showAllList, content: {
@@ -142,10 +146,12 @@ struct ResultView: View {
                                     showSharingOptions = true
                                 } label: {
                                     Label("Share scanned receipt", systemImage: "doc")
+                                        .shadow(radius: 10, x: 0, y: 10)
                                 }
                             } label: {
                                 Image(systemName: "square.and.arrow.up")
                                     .tint(Color("mYellow"))
+                                    .shadow(radius: 10, x: 0, y: 10)
                             }
                             .padding(.trailing, 30)
                             .padding(.bottom, isShownInHistory ? 0 : 60)
@@ -166,6 +172,7 @@ struct ResultView: View {
                                             Image(systemName: "person")
                                                 .tint(Color("mBlue"))
                                                 .font(.title2)
+                                                .shadow(radius: 10, x: 0, y: 10)
                                             
                                             
                                             VStack(alignment: .leading) {
@@ -173,6 +180,7 @@ struct ResultView: View {
                                                     .font(.title3)
                                                 Text("\(model.chosenItems(ofUser: user).count) items")
                                                     .font(.caption)
+                                                    .shadow(radius: 10, x: 0, y: 10)
                                             }
                                             .foregroundColor(.primary)
                                             
@@ -199,6 +207,7 @@ struct ResultView: View {
                                             Label("", systemImage: "square.and.arrow.up")
                                                 .labelStyle(.iconOnly)
                                                 .tint(Color("mBlue"))
+                                                .shadow(radius: 10, x: 0, y: 10)
                                         }
                                         .padding(.leading,7)
                                         .padding(.bottom,4)
@@ -208,6 +217,7 @@ struct ResultView: View {
                                 }
                                 .background(Color("mYellow"))
                                 .cornerRadius(24)
+                                .shadow(radius: 10, x: 0, y: 10)
                                 .padding(.horizontal)
                             }
                         }
@@ -215,9 +225,10 @@ struct ResultView: View {
                         
                         
                         
-                        Text("\(selectedUser.name) \(chosenSharingOption)") //due to https://developer.apple.com/forums/thread/652080
+                        Text("\(selectedUser.name) \(chosenSharingOption)")
                             .hidden()
                             .frame(height:0)
+                            .shadow(radius: 10, x: 0, y: 10)
                     }
                     
                 }
@@ -245,13 +256,16 @@ struct ResultView: View {
                                 HStack {
                                     Image(systemName: "checkmark")
                                         .tint(Color("mBlue"))
+                                        .shadow(radius: 10, x: 0, y: 10)
                                     Text("Done")
                                         .foregroundStyle(Color("mBlue"))
+                                        .shadow(radius: 10, x: 0, y: 10)
                                         
                                 }
                             }
                             .background(Color("mYellow"))
                             .cornerRadius(12)
+                            .shadow(radius: 10, x: 0, y: 10)
                             
                             .padding(7)
                         }
