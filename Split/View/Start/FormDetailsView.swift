@@ -83,10 +83,10 @@ struct FormDetailsView: View {
             }
         } header: {
             HStack {
-//                Text("Details")
-//                    .alert(isPresented: $showAlert1) {
-//                        Alert(title: Text("Missing information"), message: Text("Please fill in all usernames"), dismissButton: .default(Text("OK")))
-//                    }
+                Text("Users")
+                    .alert(isPresented: $showAlert1) {
+                        Alert(title: Text("Missing information"), message: Text("Please fill in all usernames"), dismissButton: .default(Text("OK")))
+                    }
                 Text("")
                     .alert(isPresented: $showAlert2) {
                         Alert(title: Text("Incorrect names"), message: Text("Users must have distinct names"), dismissButton: .default(Text("OK")))
