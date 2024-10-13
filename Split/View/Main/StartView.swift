@@ -77,7 +77,7 @@ struct StartView: View {
                                 }
                             }
                             .padding(.horizontal, 6)
-                            .disabled(names.isEmpty || (!model.startTheProcess && !model.users.isEmpty)) // 2nd case: disabled if the model has not been fully cleaned yet
+                            .disabled(names.isEmpty || (!model.startTheProcess && !model.users.isEmpty)) 
                             .onTapGesture {
                                 if names.isEmpty {
                                     showAlert3 = true

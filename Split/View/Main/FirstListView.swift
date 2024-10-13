@@ -47,51 +47,156 @@ struct FirstListView: View {
                         LoadItemsView(showScanningResults: $showScanningResults, nothingFound: $nothingFound)
                     }
                 } else {
-                    ZStack {
+                    
+                        
                         NavigationView {
-                            VStack{
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text("\(model.listOfProductsAndPrices.count) items")
-                                            .font(.title2)
-                                            .fontWeight(.semibold)
-                                        Text("\(model.showPrice(price: model.totalPriceBeforeTaxTip))")
-                                            .font(.largeTitle)
-                                            .fontWeight(.bold)
-                                        Text(textTipTax)
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Text("\(editItemAlertPair.name)") //due to https://developer.apple.com/forums/thread/652080
-                                        .hidden()
-                                        .frame(width: 0, height:0)
-                                    
-                                    VStack {
-                                        if horizontalSizeClass == .compact { //don't show on iPad's large screen
-                                            Picker("view", selection: $showView) {
-                                                ForEach(views, id: \.self) {
-                                                    Text($0)
+                            
+                            ZStack {
+                                Color("mBlue")
+                                    .ignoresSafeArea()
+                                VStack{
+                                    Text(model.receiptName)
+                                        .foregroundStyle(Color("mYellow"))
+                                        .font(.title)
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text("\(model.listOfProductsAndPrices.count) items")
+                                                .foregroundStyle(Color("mYellow"))
+                                                .font(.title2.weight(.semibold))
+                                                
+                                            Text("\(model.showPrice(price: model.totalPriceBeforeTaxTip))")
+                                                .foregroundStyle(Color("mYellow"))
+                                                .font(.largeTitle.bold())
+                                                
+                                            Text(textTipTax)
+                                                .foregroundStyle(Color("mYellow"))
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Text("\(editItemAlertPair.name)") //due to https://developer.apple.com/forums/thread/652080
+                                            .hidden()
+                                            .frame(width: 0, height:0)
+                                        
+                                        VStack {
+                                            if horizontalSizeClass == .compact { //don't show on iPad's large screen
+                                                Picker("view", selection: $showView) {
+                                                    ForEach(views, id: \.self) {
+                                                        Text($0)
+                                                            .foregroundStyle(Color("mYellow"))
+                                                    }
                                                 }
+                                                .pickerStyle(.segmented)
+                                                .padding(.horizontal, 30)
                                             }
-                                            .pickerStyle(.segmented)
-                                            .padding(.horizontal, 30)
                                         }
                                     }
-                                }
-                                .padding(.top, 10)
-                                .padding(.bottom, 10)
-                                .padding(.leading, 30)
-                                
-                                Group {
-                                    if horizontalSizeClass == .compact {
-                                        Group{
-                                            if showView=="Scan" {
+                                    .padding(.top, 10)
+                                    .padding(.bottom, 10)
+                                    .padding(.leading, 30)
+                                    
+                                    Group {
+                                        if horizontalSizeClass == .compact {
+                                            Group{
+                                                if showView=="Scan" {
+                                                    
+                                                    ZStack {
+                                                        Color("mBlue")
+                                                            .ignoresSafeArea()
+                                                        ScrollView {
+                                                            AutomatedRecognitionLabel(isEnabled: model.parameters.advancedRecognition && !model.continueWithStandardRecognition)
+                                                                .padding(.top, 10)
+                                                            
+                                                            if model.listOfProductsAndPrices.reduce(false, { previous, pair in
+                                                                return pair.name.isEmpty || previous
+                                                            }) {
+                                                                ZStack {
+                                                                    Label("Some items are missing a name", systemImage: "exclamationmark.triangle")
+                                                                        .font(.caption2)
+                                                                }
+                                                                .padding(3)
+                                                                .padding(.horizontal, 4)
+                                                                .foregroundColor(.red)
+                                                                .background(Color.red.opacity(0.2))
+                                                                .cornerRadius(15)
+                                                                .onTapGesture {
+                                                                    showView = "List"
+                                                                }
+                                                            }
+                                                            
+                                                            ForEach(model.images){ idImage in
+                                                                if let image = idImage.image {
+                                                                    Image(uiImage: visualization(image, observations: idImage.boxes(listOfProductsAndPrices: model.listOfProductsAndPrices)))
+                                                                        .resizable()
+                                                                        .scaledToFit()
+                                                                        .padding(5)
+                                                                }
+                                                            }
+                                                            .padding(.top, 10)
+                                                        }
+                                                    }
+                                                } else {
+                                                    HStack {
+                                                        AddPercentButton(isTip: true, color: Color.pink)
+                                                        AddPercentButton(isTip: false, color: CustomColor.bankGreen)
+                                                    }
+                                                    .padding(.horizontal, 20)
+                                                    .padding(.vertical, 5)
+                                                    
+                                                    List() {
+                                                        Section(header: Text("Receipt Name")) {
+                                                            VStack {
+                                                                TextField("Receipt Name", text: $model.receiptName.animation())
+                                                                    .disabled(editMode != .active)
+                                                                    .foregroundColor(editMode == .active ? .blue : .primary)
+                                                            }
+                                                        }
+                                                        
+                                                        Section(header: Text("Detected Items")) {
+                                                            ForEach(model.listOfProductsAndPrices) { pair in
+                                                                VStack(alignment: .leading) {
+                                                                    HStack {
+                                                                        Text(pair.name)
+                                                                        Spacer()
+                                                                        Text(model.showPrice(price: pair.price))
+                                                                            .padding(.trailing, 10)
+                                                                    }
+                                                                    if editMode == .active {
+                                                                        Text("Double-tap to edit")
+                                                                            .font(.caption)
+                                                                            .foregroundColor(Color.accentColor)
+                                                                            .padding(0)
+                                                                    }
+                                                                }
+                                                                
+                                                                .onTapGesture(count: 2) {
+                                                                    if editMode == .active {
+                                                                        editItemAlertPair = pair
+                                                                        editItemAlert = true
+                                                                    }
+                                                                }
+                                                            }
+                                                            .onDelete { indexSet in
+                                                                withAnimation() {
+                                                                    model.listOfProductsAndPrices.remove(atOffsets: indexSet)
+                                                                }
+                                                                if model.listOfProductsAndPrices.count == 0 {
+                                                                    nothingFound = true //so that if a user deletes all items, he is redirected to the nothing found screen
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    .listStyle(.inset)
+                                                    .environment(\.editMode, $editMode)
+                                                }
+                                            }
+                                        } else { //iPad (large screen) version
+                                            HStack{
                                                 ScrollView {
                                                     AutomatedRecognitionLabel(isEnabled: model.parameters.advancedRecognition && !model.continueWithStandardRecognition)
-                                                        .padding(.top, 10)
+                                                        .padding(.top,10)
                                                     
                                                     if model.listOfProductsAndPrices.reduce(false, { previous, pair in
                                                         return pair.name.isEmpty || previous
@@ -105,9 +210,6 @@ struct FirstListView: View {
                                                         .foregroundColor(.red)
                                                         .background(Color.red.opacity(0.2))
                                                         .cornerRadius(15)
-                                                        .onTapGesture {
-                                                            showView = "List"
-                                                        }
                                                     }
                                                     
                                                     ForEach(model.images){ idImage in
@@ -118,257 +220,180 @@ struct FirstListView: View {
                                                                 .padding(5)
                                                         }
                                                     }
-                                                    .padding(.top, 10)
-                                                }
-                                            } else {
-                                                HStack {
-                                                    AddPercentButton(isTip: true, color: Color.pink)
-                                                    AddPercentButton(isTip: false, color: CustomColor.bankGreen)
-                                                }
-                                                .padding(.horizontal, 20)
-                                                .padding(.vertical, 5)
-                                                
-                                                List() {
-                                                    Section(header: Text("Receipt Name")) {
-                                                        VStack {
-                                                            TextField("Receipt Name", text: $model.receiptName.animation())
-                                                                .disabled(editMode != .active)
-                                                                .foregroundColor(editMode == .active ? .blue : .primary)
-                                                        }
-                                                    }
-                                                    
-                                                    Section(header: Text("Detected Items")) {
-                                                        ForEach(model.listOfProductsAndPrices) { pair in
-                                                            VStack(alignment: .leading) {
-                                                                HStack {
-                                                                    Text(pair.name)
-                                                                    Spacer()
-                                                                    Text(model.showPrice(price: pair.price))
-                                                                        .padding(.trailing, 10)
-                                                                }
-                                                                if editMode == .active {
-                                                                    Text("Double-tap to edit")
-                                                                        .font(.caption)
-                                                                        .foregroundColor(Color.accentColor)
-                                                                        .padding(0)
-                                                                }
-                                                            }
-                                                            
-                                                            .onTapGesture(count: 2) {
-                                                                if editMode == .active {
-                                                                    editItemAlertPair = pair
-                                                                    editItemAlert = true
-                                                                }
-                                                            }
-                                                        }
-                                                        .onDelete { indexSet in
-                                                            withAnimation() {
-                                                                model.listOfProductsAndPrices.remove(atOffsets: indexSet)
-                                                            }
-                                                            if model.listOfProductsAndPrices.count == 0 {
-                                                                nothingFound = true //so that if a user deletes all items, he is redirected to the nothing found screen
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                .listStyle(.inset)
-                                                .environment(\.editMode, $editMode)
-                                            }
-                                        }
-                                    } else { //iPad (large screen) version
-                                        HStack{
-                                            ScrollView {
-                                                AutomatedRecognitionLabel(isEnabled: model.parameters.advancedRecognition && !model.continueWithStandardRecognition)
                                                     .padding(.top,10)
-                                                
-                                                if model.listOfProductsAndPrices.reduce(false, { previous, pair in
-                                                    return pair.name.isEmpty || previous
-                                                }) {
-                                                    ZStack {
-                                                        Label("Some items are missing a name", systemImage: "exclamationmark.triangle")
-                                                            .font(.caption2)
-                                                    }
-                                                    .padding(3)
-                                                    .padding(.horizontal, 4)
-                                                    .foregroundColor(.red)
-                                                    .background(Color.red.opacity(0.2))
-                                                    .cornerRadius(15)
                                                 }
                                                 
-                                                ForEach(model.images){ idImage in
-                                                    if let image = idImage.image {
-                                                        Image(uiImage: visualization(image, observations: idImage.boxes(listOfProductsAndPrices: model.listOfProductsAndPrices)))
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .padding(5)
-                                                    }
-                                                }
-                                                .padding(.top,10)
-                                            }
-                                            
-                                            Divider()
-                                            
-                                            VStack {
+                                                Divider()
                                                 
-                                                HStack {
-                                                    AddPercentButton(isTip: true, color: Color.pink)
-                                                    AddPercentButton(isTip: false, color: CustomColor.bankGreen)
-                                                }
-                                                .padding(.horizontal, 20)
-                                                .padding(.vertical, 5)
-                                                
-                                                List() {
-                                                    Section(header: Text("Receipt Name")) {
-                                                        VStack {
-                                                            TextField("Receipt Name", text: $model.receiptName.animation())
-                                                                .disabled(editMode != .active)
-                                                                .foregroundColor(editMode == .active ? .blue : .primary)
-                                                        }
-                                                    }
+                                                VStack {
                                                     
-                                                    Section(header: Text("Detected Items")) {
-                                                        ForEach(model.listOfProductsAndPrices) { pair in
-                                                            VStack(alignment: .leading) {
-                                                                HStack {
-                                                                    Text(pair.name)
-                                                                    Spacer()
-                                                                    Text(model.showPrice(price: pair.price))
+                                                    HStack {
+                                                        AddPercentButton(isTip: true, color: Color.pink)
+                                                        AddPercentButton(isTip: false, color: CustomColor.bankGreen)
+                                                    }
+                                                    .padding(.horizontal, 20)
+                                                    .padding(.vertical, 5)
+                                                    
+                                                    List() {
+                                                        Section(header: Text("Receipt Name")) {
+                                                            VStack {
+                                                                TextField("Receipt Name", text: $model.receiptName.animation())
+                                                                    .disabled(editMode != .active)
+                                                                    .foregroundColor(editMode == .active ? .blue : .primary)
+                                                            }
+                                                        }
+                                                        
+                                                        Section(header: Text("Detected Items")) {
+                                                            ForEach(model.listOfProductsAndPrices) { pair in
+                                                                VStack(alignment: .leading) {
+                                                                    HStack {
+                                                                        Text(pair.name)
+                                                                        Spacer()
+                                                                        Text(model.showPrice(price: pair.price))
                                                                         //.padding(.trailing, 10)
+                                                                    }
+                                                                    if editMode == .active {
+                                                                        Text("Double-tap to edit")
+                                                                            .font(.caption)
+                                                                            .foregroundColor(Color.accentColor)
+                                                                            .padding(0)
+                                                                    }
                                                                 }
-                                                                if editMode == .active {
-                                                                    Text("Double-tap to edit")
-                                                                        .font(.caption)
-                                                                        .foregroundColor(Color.accentColor)
-                                                                        .padding(0)
+                                                                
+                                                                .onTapGesture(count: 2) {
+                                                                    if editMode == .active {
+                                                                        editItemAlertPair = pair
+                                                                        editItemAlert = true
+                                                                    }
                                                                 }
                                                             }
-                                                            
-                                                            .onTapGesture(count: 2) {
-                                                                if editMode == .active {
-                                                                    editItemAlertPair = pair
-                                                                    editItemAlert = true
+                                                            .onDelete { indexSet in
+                                                                withAnimation() {
+                                                                    model.listOfProductsAndPrices.remove(atOffsets: indexSet)
                                                                 }
-                                                            }
-                                                        }
-                                                        .onDelete { indexSet in
-                                                            withAnimation() {
-                                                                model.listOfProductsAndPrices.remove(atOffsets: indexSet)
-                                                            }
-                                                            if model.listOfProductsAndPrices.count == 0 {
-                                                                nothingFound = true //so that if a user deletes all items, he is redirected to the nothing found screen
+                                                                if model.listOfProductsAndPrices.count == 0 {
+                                                                    nothingFound = true //so that if a user deletes all items, he is redirected to the nothing found screen
+                                                                }
                                                             }
                                                         }
                                                     }
-                                                }
-                                                .listStyle(.inset)
-                                                .padding(.horizontal, 5)
-                                                .padding(.trailing, 10)
-                                                .environment(\.editMode, $editMode)
-                                                
-                                                Text("") //necessary to keep the bottom bar blurred
+                                                    .listStyle(.inset)
+                                                    .padding(.horizontal, 5)
+                                                    .padding(.trailing, 10)
+                                                    .environment(\.editMode, $editMode)
                                                     
+                                                    Text("") //necessary to keep the bottom bar blurred
+                                                    
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                .sheet(isPresented: $editItemAlert) {
-                                    let name = editItemAlertPair.name
-                                    let price = editItemAlertPair.price
-                                    
-                                    InputItemDetails(title: "Modify item",
-                                                     message:"You can change the name and the price of \"\(name)\"",
-                                                     placeholder1: "Name",
-                                                     placeholder2: "Price",
-                                                     initialText: name,
-                                                     initialDouble: price,
-                                                     action: {
-                                                          let _ = $2
-                                                          if $0 != nil && $1 != nil {
-                                                              if $0! != "" {
-                                                                  let index = model.listOfProductsAndPrices.firstIndex(of: editItemAlertPair)!
-                                                                  let name = $0!
-                                                                  let price = $1!
-                                                                  withAnimation() {
-                                                                      model.listOfProductsAndPrices[index].name = name
-                                                                      model.listOfProductsAndPrices[index].price = price
-                                                                      return
-                                                                  }
-                                                              }
-                                                          }
-                                                      })
-                                }
-                            }
-                            .toolbar {
-                                ToolbarItem(placement: .navigationBarLeading) {
-                                    EditButton()
-                                        .onChange(of: editMode) { mode in
-                                            if mode==EditMode.active {
-                                                showView="List"
-                                            } else {
-                                            }
-                                        }
-                                        .environment(\.editMode, $editMode)
-                                }
-                                ToolbarItem(placement: .navigationBarTrailing) {
-                                    Button {
-                                        newItemAlert = true
-                                    } label: {
-                                        Image(systemName: "plus")
-                                    }
-                                    .sheet(isPresented: $newItemAlert) {
-                                        InputItemDetails(title: "New item",
-                                                         message:"Please enter the name and the price of the new item",
+                                    .sheet(isPresented: $editItemAlert) {
+                                        let name = editItemAlertPair.name
+                                        let price = editItemAlertPair.price
+                                        
+                                        InputItemDetails(title: "Modify item",
+                                                         message:"You can change the name and the price of \"\(name)\"",
                                                          placeholder1: "Name",
                                                          placeholder2: "Price",
-                                                         initialText: AttributionCard.textOfNewItem,
-                                                         initialDouble: nil,
+                                                         initialText: name,
+                                                         initialDouble: price,
                                                          action: {
-                                                              _ = $2
-                                                              var newPair = PairProductPrice()
-                                                              if $0 != nil && $1 != nil {
-                                                                  if $0! != "" {
-                                                                      newPair.name = $0!
-                                                                      newPair.price = $1!
-                                                                      //newPair.isNewItem = true
-                                                                      withAnimation() {
-                                                                          model.listOfProductsAndPrices.insert(newPair, at: 0)
-                                                                      }
-                                                                  }
-                                                              }
-                                                          })
-                                    }
-                                }
-                                ToolbarItem(id: UUID().uuidString, placement: .bottomBar, showsByDefault: true) {
-                                    Button {
-                                        withAnimation() {
-                                            if model.photoIsImported {
-                                                model.eraseModelData(eraseScanFails: false, fast: true)
-                                            } else {
-                                                model.eraseScanData()
+                                            let _ = $2
+                                            if $0 != nil && $1 != nil {
+                                                if $0! != "" {
+                                                    let index = model.listOfProductsAndPrices.firstIndex(of: editItemAlertPair)!
+                                                    let name = $0!
+                                                    let price = $1!
+                                                    withAnimation() {
+                                                        model.listOfProductsAndPrices[index].name = name
+                                                        model.listOfProductsAndPrices[index].price = price
+                                                        return
+                                                    }
+                                                }
                                             }
-                                            showScanningResults = false
-                                        }
-                                    } label: {
-                                        Text("Cancel")
+                                        })
                                     }
-                                    //.buttonStyle(.bordered)
-                                    .padding()
-                                    .tint(.red)
                                 }
-                                ToolbarItem(id: UUID().uuidString, placement: .bottomBar, showsByDefault: true) {
-                                    Button {
-                                        withAnimation(){
-                                            startAttribution = true
-                                        }
-                                    } label: {
-                                        Image(systemName: "arrow.right")
-                                        Text("Next")
+                                .toolbar {
+                                    ToolbarItem(placement: .navigationBarLeading) {
+                                        EditButton()
+                                            .foregroundStyle(Color("mYellow"))
+                                            .onChange(of: editMode) { mode in
+                                                if mode==EditMode.active {
+                                                    showView="List"
+                                                } else {
+                                                }
+                                            }
+                                            .environment(\.editMode, $editMode)
                                     }
-                                    .buttonStyle(.borderedProminent)
-                                    .padding()
+                                    ToolbarItem(placement: .navigationBarTrailing) {
+                                        Button {
+                                            newItemAlert = true
+                                        } label: {
+                                            Image(systemName: "plus")
+                                                .tint(Color("mYellow"))
+                                        }
+                                        .sheet(isPresented: $newItemAlert) {
+                                            InputItemDetails(title: "New item",
+                                                             message:"Please enter the name and the price of the new item",
+                                                             placeholder1: "Name",
+                                                             placeholder2: "Price",
+                                                             initialText: AttributionCard.textOfNewItem,
+                                                             initialDouble: nil,
+                                                             action: {
+                                                _ = $2
+                                                var newPair = PairProductPrice()
+                                                if $0 != nil && $1 != nil {
+                                                    if $0! != "" {
+                                                        newPair.name = $0!
+                                                        newPair.price = $1!
+                                                        //newPair.isNewItem = true
+                                                        withAnimation() {
+                                                            model.listOfProductsAndPrices.insert(newPair, at: 0)
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                    ToolbarItem(id: UUID().uuidString, placement: .bottomBar, showsByDefault: true) {
+                                        Button {
+                                            withAnimation() {
+                                                if model.photoIsImported {
+                                                    model.eraseModelData(eraseScanFails: false, fast: true)
+                                                } else {
+                                                    model.eraseScanData()
+                                                }
+                                                showScanningResults = false
+                                            }
+                                        } label: {
+                                            Text("Cancel")
+                                        }
+                                        //.buttonStyle(.bordered)
+                                        .padding()
+                                        .tint(.red)
+                                    }
+                                    ToolbarItem(id: UUID().uuidString, placement: .bottomBar, showsByDefault: true) {
+                                        Button {
+                                            withAnimation(){
+                                                startAttribution = true
+                                            }
+                                        } label: {
+                                            Image(systemName: "arrow.right")
+                                                .tint(Color("mBlue"))
+                                                
+                                            Text("Next")
+                                                .padding()
+                                                .foregroundStyle(Color("mYellow"))
+                                                .background(RoundedRectangle(cornerRadius: 24).fill(Color("mBlue")))
+                                                
+                                        }
+                                        
+                                        .padding()
+                                    }
                                 }
                             }
-                            .navigationBarTitle(Text(model.receiptName), displayMode: .inline)
 
                         }
                         .navigationViewStyle(StackNavigationViewStyle())
@@ -378,7 +403,7 @@ struct FirstListView: View {
                                 showTutorialScreen = model.parameters.showEditTutorial
                             }
                     })
-                    }
+                    
                 }
             }
             .transition(.opacity)

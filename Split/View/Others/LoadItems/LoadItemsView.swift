@@ -39,14 +39,17 @@ struct LoadItemsView: View {
                                 VStack(spacing: 3) {
                                     Label(model.photoIsImported ? "Go back" : "Try again", systemImage: "arrow.clockwise")
                                         .font(.headline)
+                                        .foregroundStyle(Color("mYellow"))
                                     Text(model.photoIsImported ? "and start again" : "with Advanced Recognition")
+                                        .foregroundStyle(Color("mYellow"))
                                         .font(.caption)
                                         .multilineTextAlignment(.leading)
                                 }
                                 Spacer()
                             }
                         }
-                        .buttonStyle(.borderedProminent)
+                        .padding(8)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(Color("mBlue")))
                         .tint(model.photoIsImported ? .red : .accentColor)
                         .padding(.horizontal, 25)
                         .padding(.bottom,5)
@@ -87,7 +90,9 @@ struct LoadItemsView: View {
                                 VStack(spacing: 3) {
                                     Label("Continue", systemImage: "arrow.right")
                                         .font(.headline)
+                                        .foregroundStyle(Color("mBlue"))
                                     Text("without Advanced Recognition for once")
+                                        .foregroundStyle(Color("mBlue"))
                                         .font(.caption)
                                         .multilineTextAlignment(.leading)
                                 }
